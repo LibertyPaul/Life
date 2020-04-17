@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+	<head>	
+		<title>Conway's Game of Life</title>
+		<link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/4/45/Glider.svg">
+	</head>
+	<body>
+		<canvas id="mainField"></canvas>
+		<br>
+		<button id="run_stop" onclick="run_stop();">Run</button>
+		<button onclick="step();">Step</button>
+		<button onclick="clearField();">Clear</button>
+		Delay: 0<input type="range" id="speed" min="0" max="250">250
+		<br>
+		<button onclick="randomize();">Randomize</button>
+		Prob: 0<input type="range" id="randomProb" min="0" max="10000">1
+		<div id="FPS_wrapper"></div>
+		<br>
+		<button onclick="position1();">Position #1</button>
+		
+		<script src="life.js">
+		</script>
+	</body>
+</html>
