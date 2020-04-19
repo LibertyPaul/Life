@@ -7,18 +7,25 @@
 	<body>
 		<canvas id="mainField"></canvas>
 		<br>
-		<button id="run_stop" onclick="run_stop();">Run</button>
-		<button onclick="step();">Step</button>
-		<button onclick="clearField();">Clear</button>
-		Delay: 0<input type="range" id="speed" min="0" max="250">250
+		<button id="startStopButton">Run</button>
+		<button id="stepButton">Step</button>
+		<button id="clearButton">Clear</button>
+		Delay: 0<input type="range" id="delayBar" min="0" max="250">250
 		<br>
-		<button onclick="randomize();">Randomize</button>
-		Prob: 0<input type="range" id="randomProb" min="0" max="10000">1
-		<div id="FPS_wrapper"></div>
+		<button id="randomizeButton">Randomize</button>
+		Prob: 0<input type="range" id="randomBar" min="0" max="10000">1
+		<div id="FPSWrapper"></div>
 		<br>
 		<button onclick="position1();">Position #1</button>
+		<input type="text" id="backupNameInput"></input>
+		<button id="saveFieldButton">Save</button>
+		<div id="savedFields"></div>
 		
-		<script src="life.js">
-		</script>
+		<script src="FPSTracker.js"></script>
+		<script src="FieldController.js"></script>
+		<script src="FieldState.js"></script>
+		<script src="FieldView.js"></script>
+		<script src="Life.js"></script>
+		<script src="Coord.js"></script>
 	</body>
 </html>
