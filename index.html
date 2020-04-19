@@ -10,7 +10,7 @@
 		<button id="startStopButton">Run</button>
 		<button id="stepButton">Step</button>
 		<button id="clearButton">Clear</button>
-		Delay: 0<input type="range" id="delayBar" min="0" max="250">250
+		Delay: 0<input type="range" id="delayBar" min="0" max="250" value="15">250
 		<br>
 		<button id="randomizeButton">Randomize</button>
 		Prob: 0<input type="range" id="randomBar" min="0" max="10000">1
@@ -19,9 +19,7 @@
 		<input type="text" id="backupNameInput"></input>
 		<button id="saveFieldButton">Save</button>
 		<br>
-		<input list="savedFields" id="savedFieldsList">
-			<datalist id="savedFields"></datalist>
-		</input>
+		<select id="savedFieldsList"></select>
 		<button id="loadFieldButton">Load</button>
 		<button id="deleteFieldButton">Delete</button>
 		

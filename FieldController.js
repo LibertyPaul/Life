@@ -1,7 +1,7 @@
 class FieldController{
 	constructor(){
 		this.running = false;
-		this.mainLoopDelay = 0;
+		this.mainLoopDelay = null;
 		this.inactiveDelay = 100;
 		this.ramdomProb = 0.5;
 
@@ -56,7 +56,7 @@ class FieldController{
 	}
 
 	refreshSavedFieldsList(){
-		var savedFields = document.getElementById('savedFields');
+		var savedFields = document.getElementById('savedFieldsList');
 		while(savedFields.lastElementChild){
 			savedFields.removeChild(savedFields.lastElementChild);
 		}
@@ -71,7 +71,7 @@ class FieldController{
 
 	attachControls(){
 		var delayBar = document.getElementById('delayBar');
-		delayBar.value = this.mainLoopDelay;
+		this.mainLoopDelay = delayBar.value;
 		delayBar.onchange = function(){
 			this.mainLoopDelay = delayBar.value;
 		}.bind(this);
