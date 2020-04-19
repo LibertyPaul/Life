@@ -19,7 +19,7 @@ class FieldState{
 		var maxCol = 0;
 
 		for (var row = 0; row < this.rowCount; ++row){
-			for (var col = 0; col < this.colCount; ++row){
+			for (var col = 0; col < this.colCount; ++col){
 				if (this.fieldState[row][col]){
 					if (minRow > row){
 						minRow = row;
@@ -40,20 +40,30 @@ class FieldState{
 			}
 		}
 
+		var newRowCount = maxRow - minRow + 1;
+		var newColCount = maxCol - minCol + 1;
+
 		if (minRow > maxRow || minCol > maxCol){
 			newRowCount = 0;
 			newColCount = 0;
 		}
-		else{
-			newRowCount = maxRow - minRow + 1;
-			newColCount = maxCol - minCol + 1;
-		}
-
+		
 		var newFieldState = new FieldState(newRowCount, newColCount);
 
 		for (var row = minRow; row <= maxRow; ++row){
 			for (var col = minCol; col <= maxCol; ++col){
-				newFieldState[row - minRow][col - minCol] = this.fieldState[row][col];
+				var oldCoord = new Coord(row, col, this.rowCount, this.colCount);
+				var newCoord = new Coord(
+					row - minRow,
+					col - minCol,
+					newRowCount,
+					newColCount
+				);
+
+				newFieldState.setCellState(
+					newCoord, 
+					this.getCellState(oldCoord)
+				);
 			}
 		}
 
@@ -96,15 +106,17 @@ class FieldState{
 	static deserialize(data){
 		var model = JSON.parse(data);
 		if (
-			! 'rowCount' in model ||
-			! 'colCount' in model ||
-			! 'fieldState' in model
+			! ('rowCount' in model) ||
+			! ('colCount' in model) ||
+			! ('fieldState' in model)
 		){
 			throw new Error('Failed to parse FieldState.');
 		}
 
 		var fieldState = new FieldState(model.rowCount, model.colCount);
 		fieldState.fieldState = model.fieldState;
+
+		return fieldState;
 	}
 
 	getCellCount(){

@@ -31,7 +31,7 @@ class Life{
 
 		var neighbourCoords = this.getNeighbours(coord);
 
-		for (let neighbourCoord of neighbourCoords){
+		for (const neighbourCoord of neighbourCoords){
 			if (field.getCellState(neighbourCoord)){
 				aliveNeighbours += 1;
 			}
@@ -46,7 +46,7 @@ class Life{
 		);
 	}
 
-	evaluateCell(coord, sourceField, destinationField, delta, alive){
+	evaluateCell(coord, sourceField, destinationField, delta){
 		var currentState = sourceField.getCellState(coord);
 		var aliveNeighbours = this.countAliveNeighbours(sourceField, coord);
 		var newState = this.getNewState(currentState, aliveNeighbours);
@@ -61,33 +61,16 @@ class Life{
 				}
 			);
 		}
-
-		if (newState){
-			alive.push(coord);
-		}
 	}
 
-	evaluateField(sourceField, destinationField, currentAlive){
+	evaluateField(sourceField, destinationField){
 		var delta = [];
-		var alive = [];
 
-		if (
-			currentAlive !== null &&
-			currentAlive.length < sourceField.getCellCount() * 0.1 &&
-			false
-		){
-			var coordsToUpdate = new Set();
-
-			for (let coord of currentAlive){
-				var neighbourCoords = this.getNeighbours(coord, true);
-				for (let neighbourCoord of neighbourCoords){
-					coordsToUpdate.add(neighbourCoord.toScalar());
-				}
-			}
-
-			for (let scalar of coordsToUpdate){
-				var coord = Coord.fromScalar(
-					scalar,
+		for (var row = 0; row < sourceField.rowCount; ++row){
+			for (var col = 0; col < sourceField.colCount; ++col){
+				var coord = new Coord(
+					row,
+					col,
 					sourceField.rowCount,
 					sourceField.colCount
 				);
@@ -96,35 +79,13 @@ class Life{
 					coord,
 					sourceField,
 					destinationField,
-					delta,
-					alive
+					delta
 				);
-			}
-		}
-		else{
-			for (var row = 0; row < sourceField.rowCount; ++row){
-				for (var col = 0; col < sourceField.colCount; ++col){
-					var coord = new Coord(
-						row,
-						col,
-						sourceField.rowCount,
-						sourceField.colCount
-					);
-
-					this.evaluateCell(
-						coord,
-						sourceField,
-						destinationField,
-						delta,
-						alive
-					);
-				}
 			}
 		}
 
 		return {
 			delta: delta,
-			alive: alive
 		};
 	}
 }

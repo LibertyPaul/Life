@@ -16,10 +16,14 @@
 		Prob: 0<input type="range" id="randomBar" min="0" max="10000">1
 		<div id="FPSWrapper"></div>
 		<br>
-		<button onclick="position1();">Position #1</button>
 		<input type="text" id="backupNameInput"></input>
 		<button id="saveFieldButton">Save</button>
-		<div id="savedFields"></div>
+		<br>
+		<input list="savedFields" id="savedFieldsList">
+			<datalist id="savedFields"></datalist>
+		</input>
+		<button id="loadFieldButton">Load</button>
+		<button id="deleteFieldButton">Delete</button>
 		
 		<script src="FPSTracker.js"></script>
 		<script src="FieldController.js"></script>
@@ -27,5 +31,7 @@
 		<script src="FieldView.js"></script>
 		<script src="Life.js"></script>
 		<script src="Coord.js"></script>
+		<script src="FieldBackupAccess.js"></script>
+		<script src="FieldBackupWrapper.js"></script>
 	</body>
 </html>

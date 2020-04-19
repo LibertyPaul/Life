@@ -100,7 +100,7 @@ class FieldView{
 	}
 
 	drawDelta(delta){
-		for (let change of delta){
+		for (const change of delta){
 			this.drawCell(change.coord, change.state);
 		}
 	}

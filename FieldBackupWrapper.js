@@ -4,6 +4,11 @@ class FieldBackupWrapper{
 		this.title = title
 	}
 
+	clone(){
+		var fieldState = this.fieldState.clone();
+		return new FieldBackupWrapper(fieldState, this.title);
+	}
+
 	serialize(){
 		var serializedField = this.fieldState.serialize();
 
@@ -18,8 +23,8 @@ class FieldBackupWrapper{
 	static deserialize(data){
 		var model = JSON.parse(data);
 		if (
-			! 'field' in model ||
-			! 'title' in model
+			! ('field' in model) ||
+			! ('title' in model)
 		){
 			throw new Error('Failed to parse FieldBackupWrapper.');
 		}

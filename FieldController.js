@@ -29,10 +29,10 @@ class FieldController{
 
 		this.fieldView.drawField(this.displayState);
 
-		this.currentAlive = null;
-
 		this.life = new Life(this.fieldView.rowCount, this.fieldView.colCount);
 		this.FPSTracker = new FPSTracker();
+
+		this.fieldBackupAccess = new FieldBackupAccess();
 
 		this.attachControls();
 	}
@@ -54,6 +54,20 @@ class FieldController{
 			startStopButton.textContent = 'Run';
 		}
 	}
+
+	refreshSavedFieldsList(){
+		var savedFields = document.getElementById('savedFields');
+		while(savedFields.lastElementChild){
+			savedFields.removeChild(savedFields.lastElementChild);
+		}
+
+		for (const savedFieldTitle of this.fieldBackupAccess.getFieldWrapperList()){
+			var option = document.createElement('option');
+			option.textContent = savedFieldTitle;
+			savedFields.appendChild(option);
+		}
+	}
+
 
 	attachControls(){
 		var delayBar = document.getElementById('delayBar');
@@ -85,7 +99,6 @@ class FieldController{
 			}
 
 			this.workingState.reset();
-			this.currentAlive = null;
 			this.commitWorkingState();
 			this.fieldView.drawField(this.displayState);
 		}.bind(this);
@@ -99,6 +112,51 @@ class FieldController{
 			this.fieldView.drawField(this.displayState);
 		}.bind(this);
 
+		
+		this.refreshSavedFieldsList();
+
+		var saveFieldButton = document.getElementById('saveFieldButton');
+		saveFieldButton.onclick = function(){
+			var backupNameInput = document.getElementById('backupNameInput');
+			var newTitle = backupNameInput.value;
+			if (!newTitle){
+				alert('Please enter the name for the save.');
+				return;
+			}
+
+			var wrapper = new FieldBackupWrapper(this.displayState, newTitle);
+
+			try{
+				this.fieldBackupAccess.addFieldWrapper(wrapper);
+			}
+			catch(ex){
+				alert(ex);
+				throw ex;
+			}
+
+			this.refreshSavedFieldsList();
+		}.bind(this);
+
+		var loadFieldButton = document.getElementById('loadFieldButton');
+		loadFieldButton.onclick = function(){
+			var savedFieldsList = document.getElementById('savedFieldsList');
+			var title = savedFieldsList.value;
+			var fieldWrapper = this.fieldBackupAccess.getFieldWrapper(title);
+
+			this.workingState.fillFrom(fieldWrapper.fieldState);
+			this.commitWorkingState();
+			this.fieldView.drawField(this.displayState);
+		}.bind(this);
+
+		var deleteFieldButton = document.getElementById('deleteFieldButton');
+		deleteFieldButton.onclick = function(){
+			var savedFieldsList = document.getElementById('savedFieldsList');
+			var title = savedFieldsList.value;
+
+			this.fieldBackupAccess.deleteFieldWrapper(title);
+			this.refreshSavedFieldsList();
+		}.bind(this);
+
 	}
 
 	restoreWorkingState(){
@@ -109,10 +167,6 @@ class FieldController{
 		this.restoreWorkingState();
 		var newState = this.workingState.flipCell(coord);
 		this.commitWorkingState();
-
-		if (newState && this.currentAlive !== null){
-			this.currentAlive.push(coord);
-		}
 
 		this.fieldView.drawField(this.displayState);
 	}
@@ -126,11 +180,8 @@ class FieldController{
 	step(){
 		var lastStepSummary = this.life.evaluateField(
 			this.displayState,
-			this.workingState,
-			this.currentAlive
+			this.workingState
 		);
-
-		this.currentAlive = lastStepSummary.alive;
 
 		this.commitWorkingState();
 
