@@ -5,6 +5,11 @@ class FieldBackupAccess{
 		this.restore();
 	}
 
+	resetFromRaw(rawData){
+		window.localStorage.setItem(this.storageKey, rawData);
+		this.restore();
+	}
+
 	restore(){
 		var storageData = window.localStorage.getItem(this.storageKey);
 		if (storageData === null){

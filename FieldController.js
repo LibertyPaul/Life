@@ -157,6 +157,21 @@ class FieldController{
 			this.refreshSavedFieldsList();
 		}.bind(this);
 
+		if (this.fieldBackupAccess.getFieldWrapperList.length === 0){
+			var examplesRequest = new XMLHttpRequest();
+			examplesRequest.onreadystatechange = function(){
+				if (
+					examplesRequest.readyState == 4 &&
+					examplesRequest.status == 200
+				){
+			 		this.fieldBackupAccess.resetFromRaw(examplesRequest.responseText);
+					this.refreshSavedFieldsList();
+				}
+			}.bind(this);
+
+			examplesRequest.open("GET", "Examples.json", true);
+			examplesRequest.send();
+		}
 	}
 
 	restoreWorkingState(){
