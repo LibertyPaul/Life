@@ -10,7 +10,7 @@ class FieldController{
 			document.getElementById('mainField'),
 			Math.max(window.innerHeight - controlsHeightPx, 100),
 			Math.max(window.innerWidth - 30, 100),
-			7,
+			5,
 			1,
 			this.flipCell.bind(this)
 		);
