@@ -40,8 +40,8 @@ class FieldController{
 	updateAndLogFPS(){
 		this.FPSTracker.logFrame();
 
-		var FPSWrapper = document.getElementById("FPSWrapper");
-		FPSWrapper.textContent = this.FPSTracker.getFPS() + ' FPS';
+		var FPSCounter = document.getElementById("FPSCounter");
+		FPSCounter.textContent = this.FPSTracker.getFPS() + ' FPS';
 	}
 
 	toggleStartStop(){
@@ -135,6 +135,7 @@ class FieldController{
 			}
 
 			this.refreshSavedFieldsList();
+			backupNameInput.value = "";
 		}.bind(this);
 
 		var loadFieldButton = document.getElementById('loadFieldButton');

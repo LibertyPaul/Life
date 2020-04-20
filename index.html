@@ -7,21 +7,28 @@
 	<body>
 		<canvas id="mainField"></canvas>
 		<br>
-		<button id="startStopButton">Run</button>
-		<button id="stepButton">Step</button>
-		<button id="clearButton">Clear</button>
-		Delay: 0<input type="range" id="delayBar" min="0" max="250" value="15">250
-		<br>
-		<button id="randomizeButton">Randomize</button>
-		Prob: 0<input type="range" id="randomBar" min="0" max="10000">1
-		<div id="FPSWrapper"></div>
-		<br>
-		<input type="text" id="backupNameInput"></input>
-		<button id="saveFieldButton">Save</button>
-		<br>
-		<select id="savedFieldsList"></select>
-		<button id="loadFieldButton">Load</button>
-		<button id="deleteFieldButton">Delete</button>
+		<div id="flowControl">
+			<button id="startStopButton">Run</button>
+			<button id="stepButton">Step</button>
+			<button id="clearButton">Clear</button>
+			Delay: 0<input type="range" id="delayBar" min="0" max="250" value="15">250
+			<br>
+			<button id="randomizeButton">Randomize</button>
+			Prob: 0<input type="range" id="randomBar" min="0" max="10000">1
+		</div>
+		<div id="savesControl">
+			<input type="text" id="backupNameInput"></input>
+			<button id="saveFieldButton">Save</button>
+			<br>
+			<input list="savedFields" id="savedFieldsList">
+				<datalist id="savedFields"></datalist>
+			</input>
+			<button id="loadFieldButton">Load</button>
+			<button id="deleteFieldButton">Delete</button>
+		</div>
+		<div id="FPSWrapper">
+			<p id="FPSCounter"></p>
+		</div>
 		
 		<script src="FPSTracker.js"></script>
 		<script src="FieldController.js"></script>
