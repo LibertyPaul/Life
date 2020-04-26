@@ -1,7 +1,7 @@
 class FPSTracker{
 	constructor(){
 		this.previousIterations = [];
-		this.windowSec = 5;
+		this.windowSec = 1;
 	}
 
 	logFrame(){

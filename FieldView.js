@@ -11,15 +11,26 @@ class FieldView{
 		this.canvas = canvasObject;
 		this.context = this.canvas.getContext('2d');
 
-		this.rowCount = Math.ceil(
-			(maxHeightPx - cellPadding) / (cellSize + cellPadding)
-		);
-		this.colCount = Math.ceil(
-			(maxWidthPx - cellPadding) / (cellSize + cellPadding)
-		);
+		this.widthPx = maxWidthPx;
 
 		this.cellSize = cellSize;
 		this.cellPadding = cellPadding;
+
+		this.rowCount = Math.floor(
+			(maxHeightPx - cellPadding) / (cellSize + cellPadding)
+		);
+
+		this.colCount = Math.floor(
+			(this.widthPx - cellPadding) / (cellSize + cellPadding)
+		);
+
+		this.heightPx = this.rowCount * (cellSize + cellPadding) + cellPadding;
+
+		this.marginLeft = Math.floor(
+			(this.widthPx - cellPadding - this.colCount * (cellSize + cellPadding)) / 2
+		);
+
+		this.marginTop = 0;
 
 		this.controllerFlipCell = controllerFlipCell;
 
@@ -30,44 +41,75 @@ class FieldView{
 		this.initCanvas();
 	}
 
-	initCanvas(){
-		var heightPx = this.rowCount * (this.cellSize + this.cellPadding) + this.cellPadding;
-		var widthPx  = this.colCount * (this.cellSize + this.cellPadding) + this.cellPadding;
+	getCanvasCoord(fieldCoord){
+		return {
+			x: this.marginLeft + this.cellPadding + fieldCoord.col * (this.cellSize + this.cellPadding),
+			y: this.marginTop  + this.cellPadding + fieldCoord.row * (this.cellSize + this.cellPadding)
+		};
+	}
 
-		this.canvas.height = heightPx;
-		this.canvas.width  = widthPx;
+	getFieldCoord(canvasCoord){
+		var isOnVerticalEdge = (
+			(
+				(canvasCoord.x - this.marginLeft)
+				%
+				(this.cellSize + this.cellPadding)
+			)
+			<=
+			this.cellPadding
+		);
+
+		var isOnHorizontalEdge = (
+			(
+				(canvasCoord.y - this.marginTop)
+				%
+				(this.cellSize + this.cellPadding)
+			)
+			<=
+			this.cellPadding
+		);
+ 
+		if(isOnVerticalEdge || isOnHorizontalEdge){
+			return null;
+		}
+		
+		var fieldCoord = new Coord(
+			Math.floor(
+				(canvasCoord.y - this.marginTop) / (this.cellSize + this.cellPadding)
+			),
+			Math.floor(
+				(canvasCoord.x - this.marginLeft) / (this.cellSize + this.cellPadding)
+			),
+			this.rowCount,
+			this.colCount
+		);
+		
+		return fieldCoord;
+	}
+
+	initCanvas(){
+		this.canvas.height = this.heightPx;
+		this.canvas.width  = this.widthPx;
 
 		this.context.fillStyle = this.backgroundColor;
-		this.context.fillRect(0, 0, widthPx, heightPx);
+		this.context.fillRect(0, 0, this.widthPx, this.heightPx);
 
 		this.canvas.addEventListener(
 			'mousedown',
 			function(event){
 				event.stopImmediatePropagation();
 
-				var x = event.pageX - this.canvas.offsetLeft;
-				var y = event.pageY - this.canvas.offsetTop;
+				var canvasCoord = {
+					x: event.pageX - this.canvas.offsetLeft,
+					y: event.pageY - this.canvas.offsetTop
+				};
 
-				var isOnVerticalEdge = (
-					x % (this.cellSize + this.cellPadding) < this.cellPadding
-				);
-
-				var isOnHorizontalEdge = (
-					y % (this.cellSize + this.cellPadding) < this.cellPadding
-				);
-		 
-				if(isOnVerticalEdge || isOnHorizontalEdge){
+				var fieldCoord = this.getFieldCoord(canvasCoord);
+				if (fieldCoord === null){
 					return;
 				}
-				
-				var coord = new Coord(
-					Math.floor(y / (this.cellSize + this.cellPadding)),
-					Math.floor(x / (this.cellSize + this.cellPadding)),
-					this.rowCount,
-					this.colCount
-				);
-				
-				this.controllerFlipCell(coord);
+
+				this.controllerFlipCell(fieldCoord);
 			}.bind(this),
 			false
 		);
@@ -80,10 +122,12 @@ class FieldView{
 		else{
 			this.context.fillStyle = this.deadColor;
 		}
+
+		var upperLeftCorner = this.getCanvasCoord(coord);
 		
 		this.context.fillRect(
-			this.cellPadding + coord.col * (this.cellSize + this.cellPadding),
-			this.cellPadding + coord.row * (this.cellSize + this.cellPadding),
+			upperLeftCorner.x,
+			upperLeftCorner.y,
 			this.cellSize,
 			this.cellSize
 		);
