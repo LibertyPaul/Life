@@ -1,6 +1,23 @@
 class Life{
 	constructor(){
-	
+		this.neighboursToBeBornWith = 3;
+		this.neighboursToLiveWith = 2;
+	}
+
+	setNeighboursToBeBornWith(value){
+		if (value < 0 || value > 8){
+			throw new Error("Incorrect value.");
+		}
+
+		this.neighboursToBeBornWith = value;
+	}
+
+	setNeighboursToLiveWith(value){
+		if (value < 0 || value > 8){
+			throw new Error("Incorrect value.");
+		}
+
+		this.neighboursToLiveWith = value;
 	}
 
 	getNeighbours(coord, includeSelf = false){
@@ -42,7 +59,11 @@ class Life{
 
 	getNewState(currentState, aliveNeighbours){
 		return (
-			aliveNeighbours === 3 || (aliveNeighbours === 2 && currentState)
+			aliveNeighbours === this.neighboursToBeBornWith ||
+			(
+				currentState &&
+				aliveNeighbours === this.neighboursToLiveWith
+			)
 		);
 	}
 
@@ -53,7 +74,7 @@ class Life{
 		
 		destinationField.setCellState(coord, newState);
 
-		if (sourceField.getCellState(coord) !== newState){
+		if (currentState !== newState){
 			delta.push(
 				{
 					coord: coord,

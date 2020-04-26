@@ -3,31 +3,98 @@
 	<head>	
 		<title>Conway's Game of Life</title>
 		<link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/4/45/Glider.svg">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<style>
+			.btn-group, .form-group {
+				height: 60px;
+				margin-right: 10px;
+			}
+
+			#FPSCounter {
+				width: 75px;
+			}
+		</style>
 	</head>
 	<body>
 		<canvas id="mainField"></canvas>
-		<br>
-		<div id="flowControl">
-			<button id="startStopButton">Run</button>
-			<button id="stepButton">Step</button>
-			<button id="clearButton">Clear</button>
-			Delay: 0<input type="range" id="delayBar" min="0" max="250" value="15">250
-			<br>
-			<button id="randomizeButton">Randomize</button>
-			Prob: 0<input type="range" id="randomBar" min="0" max="10000">1
-		</div>
-		<div id="savesControl">
-			<select id="savedFieldsList"></select>
-			<button id="loadFieldButton">Load</button>
-			<button id="deleteFieldButton">Delete</button>
-			<br>
-			<input list="text" id="backupNameInput"></input>
-			<button id="saveFieldButton">Save</button>
-		</div>
-		<div id="FPSWrapper">
-			<p id="FPSCounter"></p>
+
+		<div id="controls" class="container-fluid">
+			<div id="upperLine" class="row">
+				<div class="btn-toolbar col" role="toolbar" aria-label="Field Initialization">
+					<div class="btn-group" role="group" aria-label="Field Initialization Buttons">
+						<button id="clearButton" type="button" class="btn btn-secondary">Clear</button>
+						<button id="randomizeButton" type="button" class="btn btn-secondary">Randomize</button>
+					</div>
+					<form>
+						<div class="form-group">
+							<label for="randomizerControlRange" id="randomizerProbabilityDisplay"></label>
+							<input type="range" class="form-control-range form-control-sm" id="randomizerControlRange" min="0" max="100" value="50">
+							
+						</div>
+					</form>
+				</div>
+
+				<div class="lifeParameterControl col">
+					<form>
+						<div class="form-group">
+							<label for="neighboursToBeBornWithBar" id="neighboursToBeBornWithDisplay"></label>
+							<input type="range" class="form-control-range form-control-sm" id="neighboursToBeBornWithBar" min="0" max="8">
+						</div>
+					</form>
+				</div>
+
+				<div class="savesControl col">
+					<div class="input-group mb-3">
+						<input type="text" id="backupNameInput" class="form-control" placeholder="Title" aria-label="Save Title" aria-describedby="saveFieldButton">
+						<div class="input-group-append">
+							<button class="btn btn-outline-secondary" type="button" id="saveFieldButton">Save</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div id="bottomLine" class="row">
+				<div class="btn-toolbar col" role="toolbar" aria-label="Game Control">
+					<div class="btn-group" role="group" aria-label="Game Control Buttons">
+						<button id="startStopButton" type="button" class="btn btn-secondary"></button>
+						<button id="stepButton" type="button" class="btn btn-secondary">Step</button>
+					</div>
+					<form>
+						<div class="form-group">
+							<label for="delayBar" id="delayBarDisplay"></label>
+							<input type="range" class="form-control-range form-control-sm" id="delayBar" min="0" max="250" value="15">
+						</div>
+					</form>
+					<span class="input-group-text" id="FPSCounter"></span>
+				</div>
+
+				<div class="lifeParameterControl col">
+					<form>
+						<div class="form-group">
+							<label for="neighboursToLiveWithBar" id="neighboursToLiveWithDisplay"></label>
+							<input type="range" class="form-control-range form-control-sm" id="neighboursToLiveWithBar" name="neighboursToLiveWithBar" min="0" max="8">
+						</div>
+					</form>
+				</div>
+
+				<div class="savesControl col">
+					<div class="input-group">
+						<select class="custom-select" id="savedFieldsList" aria-label="List of saved fields">
+						</select>
+						<div class="input-group-append">
+							<button id="loadFieldButton" class="btn btn-outline-secondary" type="button">Load</button>
+							<button id="deleteFieldButton" class="btn btn-outline-secondary" type="button">Delete</button>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 		
+		<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
 		<script src="FPSTracker.js"></script>
 		<script src="FieldController.js"></script>
 		<script src="FieldState.js"></script>

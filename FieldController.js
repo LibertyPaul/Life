@@ -5,11 +5,11 @@ class FieldController{
 		this.inactiveDelay = 100;
 		this.ramdomProb = 0.5;
 
-		const controlsHeightPx = 100;
+		const controlsHeightPx = document.getElementById('controls').offsetHeight + 25;
 		this.fieldView = new FieldView(
 			document.getElementById('mainField'),
 			Math.max(window.innerHeight - controlsHeightPx, 100),
-			Math.max(window.innerWidth - 30, 100),
+			Math.max(window.innerWidth, 100),
 			5,
 			1,
 			this.flipCell.bind(this)
@@ -27,9 +27,10 @@ class FieldController{
 			this.fieldView.colCount
 		);
 
+		this.life = new Life();
+
 		this.fieldView.drawField(this.displayState);
 
-		this.life = new Life(this.fieldView.rowCount, this.fieldView.colCount);
 		this.FPSTracker = new FPSTracker();
 
 		this.fieldBackupAccess = new FieldBackupAccess();
@@ -71,13 +72,26 @@ class FieldController{
 
 	attachControls(){
 		var delayBar = document.getElementById('delayBar');
+		var delayBarDisplay = document.getElementById('delayBarDisplay');
+
 		this.mainLoopDelay = delayBar.value;
-		delayBar.onchange = function(){
+		delayBar.oninput = function(){
 			this.mainLoopDelay = delayBar.value;
+			delayBarDisplay.textContent = 'Delay: ' + delayBar.value + ' ms';
 		}.bind(this);
+
+		delayBar.oninput();
 		
-		var randomBar = document.getElementById('randomBar');
-		randomBar.value = this.ramdomProb * randomBar.max;
+		var randomizerControlRange = document.getElementById('randomizerControlRange');
+		var randomizerProbabilityDisplay = document.getElementById('randomizerProbabilityDisplay');
+
+		randomizerControlRange.oninput = function(){
+			randomizerProbabilityDisplay.textContent = 'Probability: ' + randomizerControlRange.value + ' %';
+		}.bind(this);
+
+		randomizerControlRange.oninput();
+		
+		this.ramdomProb = randomizerControlRange.value / randomizerControlRange.max;
 
 		var startStopButton = document.getElementById('startStopButton');
 		startStopButton.textContent = 'Run';
@@ -105,8 +119,8 @@ class FieldController{
 
 		var randomizeButton = document.getElementById('randomizeButton');
 		randomizeButton.onclick = function(){
-			var randomBar = document.getElementById('randomBar');
-			var probability = randomBar.value / randomBar.max;
+			// var randomizerControlRange = document.getElementById('randomizerControlRange');
+			var probability = randomizerControlRange.value / randomizerControlRange.max;
 			this.workingState.randomize(probability);
 			this.commitWorkingState();
 			this.fieldView.drawField(this.displayState);
@@ -173,6 +187,34 @@ class FieldController{
 			examplesRequest.open("GET", "Examples.json", true);
 			examplesRequest.send();
 		}
+
+		var neighboursToBeBornWithBar = document.getElementById('neighboursToBeBornWithBar');
+		neighboursToBeBornWithBar.value = this.life.neighboursToBeBornWith;
+
+		var neighboursToBeBornWithDisplay = document.getElementById('neighboursToBeBornWithDisplay');
+
+		neighboursToBeBornWithBar.oninput = function(){
+			var newValue = parseInt(neighboursToBeBornWithBar.value);
+			this.life.setNeighboursToBeBornWith(newValue);
+
+			neighboursToBeBornWithDisplay.textContent = 'Neighbours To Be Born With: ' + newValue;
+		}.bind(this);
+
+		neighboursToBeBornWithBar.oninput();
+
+		var neighboursToLiveWithBar = document.getElementById('neighboursToLiveWithBar');
+		neighboursToLiveWithBar.value = this.life.neighboursToLiveWith;
+
+		var neighboursToLiveWithDisplay = document.getElementById('neighboursToLiveWithDisplay');
+
+		neighboursToLiveWithBar.oninput = function(){
+			var newValue = parseInt(neighboursToLiveWithBar.value);
+			this.life.setNeighboursToLiveWith(newValue);
+
+			neighboursToLiveWithDisplay.textContent = 'Neighbours To Live With: ' + newValue;
+		}.bind(this);
+
+		neighboursToLiveWithBar.oninput();
 	}
 
 	restoreWorkingState(){
